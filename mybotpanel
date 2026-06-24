@@ -1,0 +1,29 @@
+<?php
+// Railway ke Variables (Jo tumne variables tab mein dekhe the)
+$host = "PASTE_MYSQLHOST_VALUE_HERE"; 
+$user = "root"; 
+$pass = "PASTE_MYSQLPASSWORD_VALUE_HERE";
+$db   = "PASTE_MYSQLDATABASE_VALUE_HERE";
+$port = "3306"; 
+
+$conn = new mysqli($host, $user, $pass, $db, $port);
+
+if ($conn->connect_error) {
+    die("Connection Failed: " . $conn->connect_error);
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $new_price = $_POST['price'];
+    $conn->query("UPDATE setting SET value = '$new_price' WHERE key_name = 'price'");
+    echo "Price Update Ho Gaya!";
+}
+
+$res = $conn->query("SELECT value FROM setting WHERE key_name = 'price'");
+$row = $res->fetch_assoc();
+?>
+
+<form method="POST">
+    <h3>Bot Control Panel</h3>
+    Price: <input name="price" value="<?php echo $row['value']; ?>">
+    <button type="submit">Update Price</button>
+</form>
